@@ -11,7 +11,7 @@ class GaussianMixtureModel():
         self.X = X
         
         # Initialize the parameters
-        self.mu = np.random.rand(k, 2)
+        self.mu = np.random.rand(k, self.d)
         self.cov_matrix = np.array([np.eye(self.d)] * k)
         self.pi = np.random.rand(k)
         # Normalize pi
@@ -31,7 +31,7 @@ class GaussianMixtureModel():
         for j in range(self.k):
             N_j = np.sum(self.r[:, j]) # Sum of the responsibilities for the jth gaussian
             self.mu[j] = np.sum(self.r[:, j].reshape(-1, 1) * self.X, axis=0) / N_j
-            self.cov_matrix[j] = (1 / N_j) * np.sum(self.r[:, j].reshape(-1, 1, 1) * np.matmul((self.X - self.mu[j]).reshape(-1, 2, 1), (self.X - self.mu[j]).reshape(-1, 1, 2)), axis=0)
+            self.cov_matrix[j] = (1 / N_j) * np.sum(self.r[:, j].reshape(-1, 1, 1) * np.matmul((self.X - self.mu[j]).reshape(-1, self.d, 1), (self.X - self.mu[j]).reshape(-1, 1, self.d)), axis=0)
             self.pi[j] = N_j / self.n
 
     def fit(self) -> None:
